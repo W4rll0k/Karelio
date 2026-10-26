@@ -1,0 +1,9 @@
+.brand-motion{position:absolute;right:10px;top:22px;width:210px;height:195px;z-index:-1;pointer-events:none;color:var(--blue);opacity:.72}
+.brand-motion-plane{position:absolute;left:19px;top:10px;width:160px;height:160px;border:1px solid color-mix(in srgb,var(--blue) 10%,transparent);border-radius:29px;transform:rotate(-8deg);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 4%,transparent),transparent)}
+.brand-motion-tile{position:absolute;width:17px;height:17px;border-radius:4px;background:currentColor;box-shadow:0 6px 16px color-mix(in srgb,var(--blue) 12%,transparent)}
+.brand-motion-tile.is-ring{width:39px;height:39px;border:9px solid currentColor;background:transparent;border-radius:9px}
+.brand-motion-caption{position:absolute;bottom:0;left:8px;width:190px;text-align:center;font-size:7px;letter-spacing:2px;font-weight:600;opacity:.55}
+@media(prefers-reduced-motion:no-preference){.brand-motion-tile{animation:karelio-assemble 7s cubic-bezier(.4,0,.2,1) var(--tile-delay) infinite both}.brand-motion[data-running=false] .brand-motion-tile{animation-play-state:paused}}
+@keyframes karelio-assemble{0%,100%{transform:translate(var(--tile-x),var(--tile-y)) rotate(-12deg) scale(.8);opacity:.12}24%,70%{transform:translate(0,0) rotate(0) scale(1);opacity:.8}82%{transform:translate(0,0) rotate(0) scale(1);opacity:.65}}
+@media(max-width:1100px){.brand-motion{right:0;opacity:.35;transform:scale(.8);transform-origin:right center}}
+@media(max-width:900px){.brand-motion{display:none}}
