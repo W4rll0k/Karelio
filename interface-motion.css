@@ -1,0 +1,51 @@
+/* All content stays visible without JavaScript, observers, or motion support. */
+@media (prefers-reduced-motion: no-preference) {
+  .ui-motion .ui-motion-reveal {
+    animation: ui-section-arrival 430ms cubic-bezier(.2, .7, .3, 1) var(--ui-arrival-delay, 0ms) both;
+  }
+
+  .ui-motion .type-tab.is-active > svg {
+    animation: ui-tab-settle 180ms cubic-bezier(.2, .75, .3, 1) both;
+    transform-origin: center;
+  }
+
+  .ui-motion button:not(:disabled) {
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 120ms ease;
+  }
+
+  .ui-motion button:not(:disabled):active { transform: scale(.98); }
+
+  .ui-motion .content-fields { animation: ui-field-arrival 160ms ease-out; }
+
+  /* The QR itself only fades. Its geometry, colors and quiet zone are untouched. */
+  .ui-motion .qr-sheet.has-qr > img { animation: ui-qr-arrival 160ms ease-out; }
+
+  .ui-motion.ui-motion-paused :is(.ui-motion-reveal, .type-tab.is-active > svg, .content-fields, .qr-sheet.has-qr > img) {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ui-section-arrival {
+  from { opacity: .64; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ui-tab-settle {
+  from { transform: scale(.85); }
+  to { transform: scale(1); }
+}
+
+@keyframes ui-field-arrival {
+  from { opacity: .78; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ui-qr-arrival {
+  from { opacity: .8; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-motion :is(.ui-motion-reveal, .type-tab.is-active > svg, .content-fields, .qr-sheet.has-qr > img) { animation: none; }
+  .ui-motion button:not(:disabled):active { transform: none; }
+}

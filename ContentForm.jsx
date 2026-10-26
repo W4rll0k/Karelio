@@ -1,0 +1,36 @@
+import { useState } from 'react';
+import { Eye, EyeOff, ArrowUpRight } from 'lucide-react';
+export default function ContentForm({ type, fields, errors, suggestion, onChange }) {
+    const [showPassword, setShowPassword] = useState(false);
+    const field = (key, label, placeholder, options = {}) => {
+        const id = `${type}-${key}`;
+        const shared = { id, name: id, value: String(fields[key] ?? ''), placeholder, onChange: (e) => onChange(key, e.target.value), 'aria-invalid': !!errors[key], 'aria-describedby': errors[key] ? `${id}-error` : options.hint ? `${id}-hint` : undefined, autoComplete: options.autoComplete ?? 'off', spellCheck: false };
+        return <div className="field" key={key}><label htmlFor={id}>{label}</label>{options.multiline ? <textarea {...shared} rows={4}/> : <input {...shared} type={options.type ?? 'text'}/>}{options.hint && <p className="field-hint" id={`${id}-hint`}>{options.hint}</p>}{errors[key] && <p className="field-error" id={`${id}-error`}>{errors[key]}</p>}</div>;
+    };
+    const phoneHint = 'QR içinde boşluklar, parantezler, tireler ve noktalar çıkarılarak arama biçimi kullanılır.';
+    let content;
+    switch (type) {
+        case 'url':
+            content = <>{field('url', 'Web adresi', 'https://ornek.com', { type: 'url', hint: 'Paylaşmak istediğin bağlantıyı https:// ile birlikte yaz.' })}{suggestion && <button type="button" className="suggestion" onClick={() => onChange('url', suggestion)}>https:// ekle ve kullan <ArrowUpRight size={15}/></button>}</>;
+            break;
+        case 'text':
+            content = field('text', 'Metnin', 'Bir not, bir fikir ya da paylaşmak istediğin herhangi bir şey…', { multiline: true, hint: 'Türkçe karakterler ve birden çok satır desteklenir.' });
+            break;
+        case 'wifi':
+            content = <>{field('ssid', 'Ağ adı (SSID)', 'Wi-Fi ağının adı')}<div className="form-row"><div className="field"><label htmlFor="wifi-security">Güvenlik türü</label><select id="wifi-security" value={String(fields.security)} onChange={e => onChange('security', e.target.value)}><option value="WPA">WPA / WPA2 / WPA3</option><option value="WEP">WEP</option><option value="nopass">Şifresiz ağ</option></select></div>{fields.security !== 'nopass' && <div className="field"><label htmlFor="wifi-password">Ağ şifresi</label><div className="password-wrap"><input id="wifi-password" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={String(fields.password)} placeholder="Wi-Fi şifresi" aria-invalid={!!errors.password} aria-describedby={errors.password ? 'wifi-password-error' : undefined} onChange={e => onChange('password', e.target.value)}/><button type="button" className="icon-button" onClick={() => setShowPassword(s => !s)} aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}>{showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}</button></div>{errors.password && <p className="field-error" id="wifi-password-error">{errors.password}</p>}</div>}</div><label className="checkbox-label"><input type="checkbox" checked={Boolean(fields.hidden)} onChange={e => onChange('hidden', e.target.checked)}/> Gizli ağ</label><p className="field-hint">Bu kodu tarayan kişiler ağına bağlanabilir. Şifren yalnızca tarayıcında işlenir.</p></>;
+            break;
+        case 'vcard':
+            content = <><div className="form-row">{field('firstName', 'Ad', 'Ada')}{field('lastName', 'Soyad', 'Yılmaz')}</div><div className="form-row">{field('phone', 'Telefon (isteğe bağlı)', '+905551234567', { type: 'tel' })}{field('email', 'E-posta (isteğe bağlı)', 'ada@ornek.com', { type: 'email' })}</div>{field('company', 'Şirket (isteğe bağlı)', 'Şirket veya kurum adı')}{field('website', 'Web sitesi (isteğe bağlı)', 'https://ornek.com', { type: 'url' })}<p className="field-hint">{phoneHint}</p></>;
+            break;
+        case 'email':
+            content = <>{field('recipient', 'Alıcının e-posta adresi', 'merhaba@ornek.com', { type: 'email' })}{field('subject', 'Konu (isteğe bağlı)', 'Mesajın konusu')}{field('message', 'Mesaj (isteğe bağlı)', 'Söylemek istediklerin…', { multiline: true })}</>;
+            break;
+        case 'sms':
+            content = <>{field('phone', 'Telefon numarası', '+905551234567', { type: 'tel', hint: phoneHint })}{field('message', 'Mesaj (isteğe bağlı)', 'SMS mesajın…', { multiline: true })}</>;
+            break;
+        case 'phone':
+            content = field('phone', 'Telefon numarası', '+905551234567', { type: 'tel', hint: phoneHint });
+            break;
+    }
+    return <div role="tabpanel" id="content-panel" aria-labelledby={`type-${type}`} tabIndex={0} className="content-fields">{content}{type === 'vcard' && suggestion && <button type="button" className="suggestion" onClick={() => onChange('website', suggestion)}>Web sitesine https:// ekle ve kullan <ArrowUpRight size={15}/></button>}</div>;
+}
